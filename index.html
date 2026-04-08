@@ -30,6 +30,8 @@
     <!-- ── HERO ── -->
     <section id="hero">
       <div class="hero-atmo"></div>
+      <div class="hero-kick"></div>
+      <div class="hero-vignette"></div>
       <div class="gl v v1"></div>
       <div class="gl v v2"></div>
       <div class="gl h h1"></div>
@@ -41,7 +43,27 @@
 
       <div class="hero-hl">
         <span class="hl-a">ONLY</span>
-        <span class="hl-b">MAMBO</span>
+        <span class="hl-b" data-text="MAMBO">MAMBO</span>
+        <svg
+          class="hl-b-svg"
+          viewBox="0 0 1000 150"
+          preserveAspectRatio="xMinYMid meet"
+          overflow="visible"
+        >
+          <defs>
+            <filter id="mambo-glow">
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <text x="0" y="52%" dominant-baseline="middle" class="hl-b-text">
+            MAMBO
+          </text>
+        </svg>
         <span class="hl-c"
           >Curated electronic music experiences —<br />built through
           environment, not scale.</span
