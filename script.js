@@ -1,3 +1,27 @@
+window.addEventListener("load", () => {
+  const preload = document.getElementById("preload");
+  const root = document.documentElement;
+
+  // Step 1: set a base energy (room is alive)
+  root.style.setProperty("--energy", 0.25);
+
+  setTimeout(() => {
+    preload.classList.add("out");
+
+    // Step 2: gently settle energy down
+    setTimeout(() => {
+      root.style.setProperty("--energy", 0.12);
+    }, 800);
+
+  }, 1400);
+  
+});
+
+setTimeout(() => {
+  const hero = document.getElementById("hero");
+  if (hero) hero.classList.add("gl-ready");
+}, 5000);
+
 /* ── Crosshair cursor ── */
 const cur = document.getElementById('cur');
 const dot = document.getElementById('cur-dot');
@@ -7,12 +31,15 @@ document.addEventListener('mousemove', e => {
   cur.style.left = mx + 'px';
   cur.style.top  = my + 'px';
 });
+
+
 (function loop() {
   cx += (mx-cx)*.09; cy += (my-cy)*.09;
   dot.style.left = cx + 'px';
   dot.style.top  = cy + 'px';
   requestAnimationFrame(loop);
 })();
+
 /* Crosshair grows on interactive elements */
 document.querySelectorAll('a,button,.exp-item,.p-type,.play-wrap').forEach(el => {
   el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(1.8)'; });

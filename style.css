@@ -5,7 +5,7 @@
   --white: #f0ece4;
   --off: #7a7370;
   --dim: #3a3735;
-  --line: rgba(240, 236, 228, 0.06);
+  --line: rgba(240, 236, 228, 0.1);
   --line2: rgba(240, 236, 228, 0.11);
 
   /* === HERO BREATHING SYSTEM === */
@@ -61,6 +61,93 @@ body::after {
 
   opacity: calc(0.15 + var(--energy) * 0.25);
   transition: opacity 1s ease;
+}
+
+/* ─── PRELOAD LAYER ─── */
+#preload {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  z-index: 99999;
+  pointer-events: none;
+
+  opacity: 1;
+  transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#preload.out {
+  opacity: 0;
+}
+
+/* Atmosphere */
+.preload-atmo {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      ellipse at 65% 30%,
+      rgba(140, 20, 20, 0.22) 0%,
+      rgba(120, 10, 10, 0.12) 25%,
+      rgba(100, 8, 8, 0.06) 50%,
+      transparent 85%
+    ),
+    radial-gradient(
+      ellipse at 30% 70%,
+      rgba(80, 5, 5, 0.12) 0%,
+      transparent 70%
+    );
+
+  animation: preloadBreath 5s ease-in-out infinite;
+}
+
+@keyframes preloadBreath {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+/* Atmosphere (matches hero language) */
+.preload-atmo {
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      ellipse at 65% 30%,
+      rgba(140, 20, 20, 0.22) 0%,
+      rgba(120, 10, 10, 0.12) 25%,
+      rgba(100, 8, 8, 0.06) 50%,
+      transparent 85%
+    ),
+    radial-gradient(
+      ellipse at 30% 70%,
+      rgba(80, 5, 5, 0.12) 0%,
+      transparent 70%
+    );
+
+  animation: preloadBreath 5s ease-in-out infinite;
+
+  mix-blend-mode: screen;
+  filter: blur(40px);
+}
+
+@keyframes preloadBreath {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
 }
 
 /* ─── CURSOR — crosshair instead of circle ─── */
@@ -257,7 +344,43 @@ nav.scrolled {
   padding: 0;
   overflow: hidden;
   z-index: 2;
+  opacity: 0;
+  animation: heroReveal 1.2s ease 1s forwards;
 }
+
+@keyframes heroReveal {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.6;
+    filter: blur(8px);
+  }
+  60% {
+    transform: scale(1.03);
+    opacity: 1;
+    filter: blur(4px);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+    filter: blur(0px);
+  }
+}
+
+/* @keyframes heroReveal {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  40% {
+    opacity: 1;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 0.85;
+    filter: blur(0px);
+  }
+} */
+
 .hero-atmo {
   position: absolute;
   inset: 0;
@@ -273,9 +396,9 @@ nav.scrolled {
   background:
     radial-gradient(
       ellipse at 60% 40%,
-      rgba(140, 20, 20, 0.18) 0%,
-      rgba(120, 10, 10, 0.1) 20%,
-      rgba(100, 8, 8, 0.05) 45%,
+      rgba(140, 20, 20, calc(0.1 + var(--energy) * 0.2)) 0%,
+      rgba(120, 10, 10, calc(0.06 + var(--energy) * 0.12)) 25%,
+      rgba(100, 8, 8, calc(0.03 + var(--energy) * 0.08)) 45%,
       transparent 85%
     ),
     radial-gradient(
@@ -284,7 +407,9 @@ nav.scrolled {
       transparent 25%
     );
 
-  animation: breathePrimary 6.2s ease-in-out infinite;
+  animation:
+    heroReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    breathePrimary 6.2s ease-in-out infinite 2.2s;
   animation-delay: -2.1s;
 
   border-radius: 50%;
@@ -299,10 +424,9 @@ nav.scrolled {
   left: 2%;
   background: radial-gradient(
     ellipse at 60% 40%,
-    rgba(120, 10, 10, 0.12) 0%,
-    rgba(100, 8, 8, 0.07) 25%,
-    rgba(100, 8, 8, 0.04) 45%,
-    rgba(100, 8, 8, 0.02) 65%,
+    rgba(120, 10, 10, calc(0.08 + var(--energy) * 0.15)) 0%,
+    rgba(100, 8, 8, calc(0.05 + var(--energy) * 0.1)) 25%,
+    rgba(100, 8, 8, calc(0.02 + var(--energy) * 0.06)) 45%,
     transparent 85%
   );
   border-radius: 50%;
@@ -341,29 +465,30 @@ nav.scrolled {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+
   background: radial-gradient(
     ellipse 50% 40% at 55% 45%,
-    rgba(139, 26, 26, 0.08) 0%,
-    rgba(139, 26, 26, 0.04) 35%,
-    transparent 75%
+    rgba(140, 20, 20, 0.18) 0%,
+    rgba(140, 20, 20, 0.08) 30%,
+    transparent 70%
   );
-  animation: kickPulse var(--kick-dur) cubic-bezier(0.2, 0, 0.8, 1) infinite;
-  animation-delay: -1.3s;
-  filter: blur(20px);
+
+  opacity: 0;
+  animation: heroKick 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes kickPulse {
+@keyframes heroKick {
   0% {
     opacity: 0;
-    transform: scale(0.995);
+    filter: blur(20px);
   }
-  12% {
-    opacity: calc(0.25 + var(--energy) * 0.25);
-    transform: scale(1.01);
+  35% {
+    opacity: 0.6;
+    filter: blur(10px);
   }
   100% {
     opacity: 0;
-    transform: scale(1.015);
+    filter: blur(25px);
   }
 }
 
@@ -385,6 +510,12 @@ nav.scrolled {
 .gl {
   position: absolute;
   pointer-events: none;
+  opacity: 0;
+  /* filter: blur(1px) brightness(0.8); */
+
+  /* background: red !important; */
+  /* height: 4px !important;
+  width: 4px !important; */
 }
 .gl.v {
   top: 0;
@@ -412,19 +543,102 @@ nav.scrolled {
 }
 .gl.v1 {
   left: 58%;
+  animation-delay: 2.2s;
+  /* filter: brightness(1.2); */
 }
 .gl.v2 {
   right: 18%;
-  opacity: 0.4;
+  animation-delay: 2.45s;
+  animation-direction: reverse;
+  /* filter: brightness(0.9); */
 }
 .gl.h1 {
   top: 40%;
+  animation-delay: 2.7s;
+  /* filter: brightness(0.8); */
+}
+
+@keyframes glReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh);
+    /* filter: blur(6px) brightness(0.6); */
+  }
+
+  5% {
+    opacity: 1; /* 👈 same trick */
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    /* filter: blur(1px) brightness(1.05); */
+  }
+}
+
+@keyframes glRevealDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100vh); /* 👈 opposite direction */
+    /* filter: blur(6px) brightness(0.6); */
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    /* filter: blur(1px) brightness(1.05); */
+  }
+}
+
+@keyframes glRevealX {
+  0% {
+    opacity: 0;
+    transform: translateX(-100vw);
+    /* filter: blur(6px) brightness(0.6); */
+  }
+
+  5% {
+    opacity: 1;
+  }
+
+  40% {
+    /* filter: blur(2px) brightness(2.2);  */
+    filter: brightness(2000);
+  }
+
+  70% {
+    /* filter: blur(1.5px) brightness(1.6); */
+    filter: brightness(1000);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    /* filter: blur(1px) brightness(0.85);  */
+    filter: brightness(1);
+  }
+}
+
+.hero.gl-ready .gl.v1 {
+  animation: glReveal 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero.gl-ready .gl.v2 {
+  animation: glRevealDown 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero.gl-ready .gl.h {
+  animation: glRevealX 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Status — rotated, left edge */
 .hero-status {
   position: absolute;
-  left: 2.5rem;
+  left: -7.5rem;
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
   transform-origin: center center;
@@ -485,7 +699,8 @@ nav.scrolled {
   display: block;
   font-family: "Syne", sans-serif;
   font-weight: 800;
-  font-size: clamp(70px, 13.5vw, 185px);
+  /* font-size: clamp(70px, 13.5vw, 185px); */
+  font-size: 0;
   letter-spacing: -0.04em;
   line-height: 0.84;
   color: transparent;
@@ -493,6 +708,8 @@ nav.scrolled {
   margin-left: clamp(40px, 8vw, 120px);
   opacity: 0;
   animation: riseUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.18s forwards;
+  top: -3000px;
+  left: -3000px;
 }
 .hl-b-svg {
   width: clamp(320px, 60vw, 1200px);
